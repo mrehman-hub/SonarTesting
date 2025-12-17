@@ -2,10 +2,10 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    id("org.sonarqube") version "2.5"
+    id("org.sonarqube") version "4.3.1.3277"
 }
 
-sonarqube {
+sonar {
     properties {
         property("sonar.host.url", System.getenv("SONAR_HOST_URL"))
         property("sonar.login", System.getenv("SONAR_TOKEN"))
