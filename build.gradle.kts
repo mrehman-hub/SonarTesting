@@ -7,10 +7,10 @@ plugins {
 
 sonarqube {
     properties {
-        property("sonar.projectName", "SonarTesting")
-        property("sonar.projectKey", "mrehman-hub_SonarTesting")
-        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.host.url", System.getenv("SONAR_HOST_URL"))
         property("sonar.login", System.getenv("SONAR_TOKEN"))
+        property("sonar.projectKey", System.getenv("SONAR_PROJECT_KEY"))
+        property("sonar.organization", System.getenv("SONAR_ORGANIZATION"))
         property("sonar.sources","src/main/java")
         property("sonar.language","java")
         property("sonar.sourceEncoding", "UTF-8")
