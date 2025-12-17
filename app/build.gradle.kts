@@ -58,7 +58,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
-    implementation("com.github.zohaircosmo:com.cosmo.loadinganimation:1.1.3-beta")
     implementation ("com.google.android.support:wearable:2.9.0")
     compileOnly ("com.google.android.wearable:wearable:2.9.0")
 
