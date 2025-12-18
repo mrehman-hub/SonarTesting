@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         layout.clipToOutline = true
 
         findViewById<AppCompatButton>(R.id.showDialog).setOnClickListener {
-            val email = findViewById<AppCompatEditText>(R.id.etEmail).text.toString()
+            val email = findViewById<AppCompatEditText>(R.id).text.toString()
             if (email.isNotEmpty() && email.isNotBlank()) {
                 createTokenOnBaseOfEmail(email)
             }
