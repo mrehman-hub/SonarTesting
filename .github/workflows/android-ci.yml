@@ -1,59 +1,36 @@
-name: Android CI
-
+name: SonarQube
 on:
   push:
     branches:
-      - main
       - master
-      - develop
   pull_request:
-    branches:
-      - main
-      - develop
-      - master
-
+    types: [opened, synchronize, reopened]
 jobs:
   build:
-
+    name: Build and analyze
     runs-on: ubuntu-latest
-
-    env:
-        SONAR_HOST_URL: https://sonarcloud.io
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_PROJECT_KEY: mrehman-hub_SonarTesting
-        SONAR_ORGANIZATION: mrehman-hub
-
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # 2. Set up JDK
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
           java-version: 17
-
-      # 3. Cache Gradle
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
+          distribution: 'zulu' # Alternative distribution options are available
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      # 4. Build the project
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
-
-      # 5. Run SonarQube scan
-      - name: SonarQube Scan
-        run: ./gradlew sonarqube \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.organization=$SONAR_ORGANIZATION
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Build and analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build sonar --info
